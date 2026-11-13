@@ -1,6 +1,7 @@
 import {describe,it,expect} from "vitest";
 import request from "supertest";
 import {app} from "./app";\nimport JSZip from "jszip";
+const binaryParser=(response:any,callback:(error:Error|null,body:Buffer)=>void)=>{const chunks:Buffer[]=[];response.on("data",(chunk:Buffer)=>chunks.push(Buffer.from(chunk)));response.on("end",()=>callback(null,Buffer.concat(chunks)));};
 
 describe("HTTP API",()=>{
  it("returns health status",async()=>{
@@ -25,7 +26,7 @@ describe("HTTP API",()=>{
   expect(response.headers["access-control-expose-headers"]).toContain("Content-Disposition");
  });
  it("creates a ZIP archive from multiple arbitrary files",async()=>{
-  const response=await request(app).post("/api/convert/zip-create/batch")
+  const response=await request(app).post("/api/convert/zip-create/batch").buffer(true).parse(binaryParser)
    .attach("files",Buffer.from("alpha"),"a.txt")
    .attach("files",Buffer.from("beta"),"b.bin");
   expect(response.status).toBe(200);
