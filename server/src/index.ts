@@ -1,1 +1,1 @@
-import {app} from "./app";const port=Number(process.env.PORT||4000);app.listen(port,()=>console.log("FileConverter API listening on "+port));
+import {app} from "./app";const port=Number(process.env.PORT||4000);const server=app.listen(port,()=>console.log("FileConverter API listening on "+port));server.requestTimeout=120000;server.headersTimeout=125000;server.keepAliveTimeout=5000;
