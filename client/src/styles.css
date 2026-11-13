@@ -23,3 +23,5 @@
 .service-dot.offline{background:#d99a42;box-shadow:0 0 0 3px rgba(217,154,66,.12)}
 
 .section-heading h2{display:flex;align-items:center;gap:8px}.section-heading h2 svg{color:var(--accent)}
+
+.nav-tool:disabled,.file-list-heading button:disabled,.remove-file:disabled{opacity:.45;cursor:not-allowed}
