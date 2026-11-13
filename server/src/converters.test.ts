@@ -60,7 +60,7 @@ describe("conversion engine",()=>{
  it("rejects malformed PDF bytes",async()=>{
   await expect(convert("pdf-to-images",Buffer.from("not a pdf"),"bad.pdf")).rejects.toThrow();
  });
- it("rejects malformed XML",async()=>{
+ it("creates a valid ZIP archive for a single file",async()=>{\n  const result=await convert("zip-create",Buffer.from("hello"),"hello.txt");\n  const zip=await JSZip.loadAsync(result.buffer);\n  expect(await zip.file("hello.txt")?.async("string")).toBe("hello");\n });\n it("rejects malformed XML",async()=>{
   await expect(convert("xml-to-json",Buffer.from("<broken>"),"x.xml")).rejects.toThrow();
  });
 });
