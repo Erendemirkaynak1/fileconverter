@@ -6,7 +6,7 @@ A full-stack file conversion platform built with React, TypeScript, Express and 
 
 - Images: PNG → JPG, JPG → PNG, WEBP → PNG, PNG/JPG → WEBP, BMP → PNG.
 - Data: JSON → CSV, CSV → JSON, XML → JSON, JSON → XML, XLSX → CSV, CSV → XLSX.
-- Text: UTF-8 text validation/normalization.
+- Text: Markdown → sanitized HTML and UTF-8 text validation/normalization.
 - Archives: ZIP extraction with path traversal checks, entry-count and expanded-size limits.
 - Batch: convert up to 10 files in one request and download verified results as a ZIP archive (50 MB combined input limit).
 
