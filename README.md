@@ -1,6 +1,6 @@
 # FileConverter
 
-A full-stack file conversion platform built with React, TypeScript, Express and Sharp. The project prioritizes truthful conversion status, input validation and in-memory processing.
+A full-stack file conversion platform built with React, TypeScript, Express and Sharp. The project prioritizes truthful conversion status, input validation and short-lived, automatically cleaned processing workspaces.
 
 ## Implemented conversions
 
@@ -56,8 +56,8 @@ Successful conversion responses include `X-Conversion-Verified: true`; the clien
 - DOCX/TXT/HTML to PDF uses LibreOffice in headless mode; PDF rasterization uses Poppler (`pdfinfo`/`pdftoppm`).
 - Document conversion processes have execution timeouts; PDF-to-image is capped at 20 pages.
 - ZIP extraction rejects absolute and parent-traversal paths, caps entries at 500 and expanded output at 100 MB.
-- Helmet security headers and an explicit CORS origin are configured.
-- Do not expose the API directly to untrusted public traffic without adding rate limiting, request timeouts, authentication/abuse controls and production observability.
+- Helmet security headers, an explicit CORS origin, a 30-request / 15-minute conversion rate limit, and server request timeouts are configured.
+- For a public production deployment, add authentication/abuse controls, structured monitoring, and infrastructure-level concurrency limits.
 
 ## Docker
 
