@@ -15,11 +15,14 @@ describe("HTTP API",()=>{
  });
  it("converts multiple CSV files into a verified ZIP archive",async()=>{
   const response=await request(app).post("/api/convert/csv-to-json/batch")
+   .set("Origin","http://localhost:5173")
    .attach("files",Buffer.from("name\nAda"),"one.csv")
    .attach("files",Buffer.from("name\nLin"),"two.csv");
   expect(response.status).toBe(200);
   expect(response.headers["x-conversion-verified"]).toBe("true");
   expect(response.headers["content-type"]).toContain("application/zip");
+  expect(response.headers["access-control-expose-headers"]).toContain("X-Conversion-Verified");
+  expect(response.headers["access-control-expose-headers"]).toContain("Content-Disposition");
  });
  it("rejects unsupported file extensions",async()=>{
   const response=await request(app).post("/api/convert/txt-utf8").attach("file",Buffer.from("hello"),"payload.exe");
