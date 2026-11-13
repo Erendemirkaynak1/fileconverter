@@ -24,7 +24,16 @@ describe("HTTP API",()=>{
   expect(response.headers["access-control-expose-headers"]).toContain("X-Conversion-Verified");
   expect(response.headers["access-control-expose-headers"]).toContain("Content-Disposition");
  });
- it("creates a ZIP archive from multiple arbitrary files",async()=>{\n  const response=await request(app).post("/api/convert/zip-create/batch")\n   .attach("files",Buffer.from("alpha"),"a.txt")\n   .attach("files",Buffer.from("beta"),"b.bin");\n  expect(response.status).toBe(200);\n  expect(response.headers["x-conversion-verified"]).toBe("true");\n  const zip=await JSZip.loadAsync(response.body);\n  expect(Object.keys(zip.files).filter(name=>!zip.files[name].dir)).toHaveLength(2);\n });\n it("rejects unsupported file extensions",async()=>{
+ it("creates a ZIP archive from multiple arbitrary files",async()=>{
+  const response=await request(app).post("/api/convert/zip-create/batch")
+   .attach("files",Buffer.from("alpha"),"a.txt")
+   .attach("files",Buffer.from("beta"),"b.bin");
+  expect(response.status).toBe(200);
+  expect(response.headers["x-conversion-verified"]).toBe("true");
+  const zip=await JSZip.loadAsync(response.body);
+  expect(Object.keys(zip.files).filter(name=>!zip.files[name].dir)).toHaveLength(2);
+ });
+ it("rejects unsupported file extensions",async()=>{
   const response=await request(app).post("/api/convert/txt-utf8").attach("file",Buffer.from("hello"),"payload.exe");
   expect(response.status).toBe(415);
  });
