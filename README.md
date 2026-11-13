@@ -11,7 +11,6 @@ A full-stack file conversion platform built with React, TypeScript, Express and 
 - Archives: ZIP extraction with path traversal checks, entry-count and expanded-size limits.
 - Batch: convert up to 10 files in one request and download verified results as a ZIP archive (50 MB combined input limit).
 
-DOCX/PDF, PDF-to-image, HTML-to-PDF and ZIP creation are not advertised as available yet. They require additional conversion engines and are intentionally deferred rather than simulated.
 
 ## Requirements
 
