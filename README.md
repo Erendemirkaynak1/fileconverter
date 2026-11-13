@@ -51,10 +51,11 @@ Successful conversion responses include `X-Conversion-Verified: true`; the clien
 - Uploads are held in memory; document conversions use isolated temporary directories that are removed in a `finally` cleanup path.
 - Default maximum single-file upload size is 25 MB.
 - Batch requests accept up to 10 files, 5 MB each, and 50 MB combined.
-- Only registered extensions are accepted; image signatures are checked before image conversion.
+- Conversion endpoints validate supported extensions and inspect image, PDF, DOCX and XLSX signatures/structures before processing.
 - Sharp has a pixel limit to mitigate decompression bombs.
 - DOCX/TXT/HTML to PDF uses LibreOffice in headless mode; PDF rasterization uses Poppler (`pdfinfo`/`pdftoppm`).
-- Document conversion processes have execution timeouts; PDF-to-image is capped at 20 pages.
+- Document conversion processes have execution timeouts; PDF-to-image is capped at 20 pages and 2,400 pixels per page dimension.
+- Converted outputs are capped at 100 MB.
 - ZIP extraction rejects absolute and parent-traversal paths, caps entries at 500 and expanded output at 100 MB.
 - Helmet security headers, an explicit CORS origin, a 30-request / 15-minute conversion rate limit, and server request timeouts are configured.
 - For a public production deployment, add authentication/abuse controls, structured monitoring, and infrastructure-level concurrency limits.
