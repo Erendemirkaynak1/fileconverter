@@ -21,3 +21,5 @@
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
 .service-dot.offline{background:#d99a42;box-shadow:0 0 0 3px rgba(217,154,66,.12)}
+
+.section-heading h2{display:flex;align-items:center;gap:8px}.section-heading h2 svg{color:var(--accent)}
