@@ -29,7 +29,7 @@ describe("conversion engine",()=>{
   expect(result.buffer.toString()).toContain("<h1");
   expect(result.buffer.toString()).not.toContain("<script>");
  });
- it("converts plain text to a parseable PDF",async()=>{
+ it("converts UTF-8 text to UTF-16LE and back",async()=>{\n  const input=Buffer.from("Hello π","utf8");\n  const encoded=await convert("txt-utf8-to-utf16le",input,"text.txt");\n  expect(new TextDecoder("utf-16le",{fatal:true}).decode(encoded.buffer)).toBe("Hello π");\n  const decoded=await convert("txt-utf16le-to-utf8",encoded.buffer,"text.txt");\n  expect(decoded.buffer.toString("utf8")).toBe("Hello π");\n });\n it("rejects text that cannot be represented in Windows-1252",async()=>{\n  await expect(convert("txt-utf8-to-windows1252",Buffer.from("emoji 😀"),"text.txt")).rejects.toThrow();\n });\n it("converts Windows-1252 to UTF-8",async()=>{\n  const result=await convert("txt-windows1252-to-utf8",Buffer.from([0x80]),"legacy.txt");\n  expect(result.buffer.toString("utf8")).toBe("€");\n });\n it("converts plain text to a parseable PDF",async()=>{
   const result=await convert("txt-to-pdf",Buffer.from("FileConverter document test"),"note.txt");
   expect(result.buffer.subarray(0,5).toString()).toBe("%PDF-");
   expect((await PDFDocument.load(result.buffer)).getPageCount()).toBeGreaterThan(0);
