@@ -2,6 +2,7 @@ import {describe,it,expect} from "vitest";
 import {convert} from "./converters";
 import {PDFDocument} from "pdf-lib";
 import JSZip from "jszip";
+import ExcelJS from "exceljs";
 
 describe("conversion engine",()=>{
  it("converts JSON arrays to CSV",async()=>{
@@ -19,7 +20,7 @@ describe("conversion engine",()=>{
  it("converts CSV into a readable XLSX workbook",async()=>{
   const result=await convert("csv-to-xlsx",Buffer.from("name,age\nAda,36"),"people.csv");
   expect(result.filename).toBe("people.xlsx");
-  const workbook=new (await import("exceljs")).default.Workbook();
+  const workbook=new ExcelJS.Workbook();
   await workbook.xlsx.load(result.buffer as any);
   expect(workbook.worksheets[0].getCell("A1").value).toBe("name");
  });
