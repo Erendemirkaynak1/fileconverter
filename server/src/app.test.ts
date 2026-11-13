@@ -1,6 +1,7 @@
 import {describe,it,expect} from "vitest";
 import request from "supertest";
-import {app} from "./app";\nimport JSZip from "jszip";
+import {app} from "./app";
+import JSZip from "jszip";
 const binaryParser=(response:any,callback:(error:Error|null,body:Buffer)=>void)=>{const chunks:Buffer[]=[];response.on("data",(chunk:Buffer)=>chunks.push(Buffer.from(chunk)));response.on("end",()=>callback(null,Buffer.concat(chunks)));};
 
 describe("HTTP API",()=>{
