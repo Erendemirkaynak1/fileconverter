@@ -12,6 +12,16 @@ A full-stack file conversion platform built with React, TypeScript, Express and 
 - Batch: convert up to 10 files in one request and download verified results as a ZIP archive (50 MB combined input limit).
 
 
+## Interface
+
+- Responsive workspace with searchable converter navigation and category grouping.
+- Light and dark themes, with the selected theme remembered in the browser.
+- Drag-and-drop and multi-file selection with per-file removal and early size/format validation.
+- Real upload progress followed by an indeterminate processing state while the server converts and verifies the result.
+- Recent conversion history stored locally in the browser (last eight entries; no file contents).
+- Keyboard shortcut: Ctrl/Cmd + K focuses converter search.
+- Accessible focus styles, keyboard-operable upload area, and reduced-motion support.
+
 ## Requirements
 
 - Node.js 22+
