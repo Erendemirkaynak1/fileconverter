@@ -27,6 +27,7 @@ export async function verify(result:Result):Promise<void>{
  if(result.mimeType==="application/xml"){if(XMLValidator.validate(result.buffer.toString("utf8"))!==true)throw Error("XML output verification failed.");return;}
  if(ext==="xlsx"){const workbook=new ExcelJS.Workbook();await workbook.xlsx.load(result.buffer as any);if(!workbook.worksheets.length)throw Error("Workbook output verification failed.");return;}
  if(result.mimeType==="application/zip"){const archive=await JSZip.loadAsync(result.buffer);if(!Object.keys(archive.files).length)throw Error("Archive output verification failed.");return;}
- if(result.mimeType.startsWith("text/html")){const html=result.buffer.toString("utf8");if(!/<html[\s>]/i.test(html)||/<script\b/i.test(html))throw Error("HTML output verification failed.");return;}\n if(result.mimeType.startsWith("text/plain")){new TextDecoder("utf-8",{fatal:true}).decode(result.buffer);return;}
+ if(result.mimeType.startsWith("text/html")){const html=result.buffer.toString("utf8");if(!/<html[\s>]/i.test(html)||/<script\b/i.test(html))throw Error("HTML output verification failed.");return;}
+ if(result.mimeType.startsWith("text/plain")){new TextDecoder("utf-8",{fatal:true}).decode(result.buffer);return;}
  throw Error("No output verifier is available for this format.");
 }
