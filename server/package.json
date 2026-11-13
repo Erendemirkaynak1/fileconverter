@@ -23,7 +23,8 @@
     "exceljs": "^4.4.0",
     "marked": "^15.0.7",
     "sanitize-html": "^2.14.0",
-    "pdf-lib": "^1.17.1"
+    "pdf-lib": "^1.17.1",
+    "express-rate-limit": "^7.5.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
