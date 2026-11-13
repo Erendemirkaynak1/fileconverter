@@ -1,1 +1,32 @@
-import{describe,it,expect}from'vitest';import request from'supertest';import{app}from'./app';describe('HTTP API',()=>{it('health endpoint',async()=>{const r=await request(app).get('/api/health');expect(r.status).toBe(200);expect(r.body.status).toBe('ok')});it('lists available converters',async()=>{const r=await request(app).get('/api/conversions');expect(r.body.some((x:{id:string})=>x.id==='png-to-webp')).toBe(true)});it('converts multiple CSV files into a verified ZIP archive',async()=>{const r=await request(app).post('/api/convert/csv-to-json/batch').attach('files',Buffer.from('name\\nAda'),'one.csv').attach('files',Buffer.from('name\\nLin'),'two.csv');expect(r.status).toBe(200);expect(r.headers['x-conversion-verified']).toBe('true');expect(r.headers['content-type']).toContain('application/zip')});it('rejects unknown converter',async()=>{expect((await request(app).post('/api/convert/nope')).status).toBe(404)})});
+import {describe,it,expect} from "vitest";
+import request from "supertest";
+import {app} from "./app";
+
+describe("HTTP API",()=>{
+ it("returns health status",async()=>{
+  const response=await request(app).get("/api/health");
+  expect(response.status).toBe(200);
+  expect(response.body.status).toBe("ok");
+ });
+ it("lists the supported document converters",async()=>{
+  const response=await request(app).get("/api/conversions");
+  expect(response.body.some((item:{id:string})=>item.id==="docx-to-pdf")).toBe(true);
+  expect(response.body.some((item:{id:string})=>item.id==="pdf-to-images")).toBe(true);
+ });
+ it("converts multiple CSV files into a verified ZIP archive",async()=>{
+  const response=await request(app).post("/api/convert/csv-to-json/batch")
+   .attach("files",Buffer.from("name\nAda"),"one.csv")
+   .attach("files",Buffer.from("name\nLin"),"two.csv");
+  expect(response.status).toBe(200);
+  expect(response.headers["x-conversion-verified"]).toBe("true");
+  expect(response.headers["content-type"]).toContain("application/zip");
+ });
+ it("rejects unsupported file extensions",async()=>{
+  const response=await request(app).post("/api/convert/txt-utf8").attach("file",Buffer.from("hello"),"payload.exe");
+  expect(response.status).toBe(415);
+ });
+ it("rejects unknown converters",async()=>{
+  const response=await request(app).post("/api/convert/nope");
+  expect(response.status).toBe(404);
+ });
+});
