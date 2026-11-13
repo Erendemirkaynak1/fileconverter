@@ -17,3 +17,14 @@ export async function convert(id:string,input:Buffer,original:string):Promise<Re
  if(id==="zip-extract"){const zip=await JSZip.loadAsync(input);const out=new JSZip();const entries=Object.values(zip.files).filter(f=>!f.dir);if(entries.length>500)throw Error("Archive has more than 500 entries.");let total=0;for(const f of entries){const path=f.name.replace(/\\/g,"/");if(path.startsWith("/")||path.split("/").includes(".."))throw Error("Unsafe archive path.");const declared=(f as unknown as {_data?:{uncompressedSize?:number}})._data?.uncompressedSize??0;if(declared>100*1024*1024||total+declared>100*1024*1024)throw Error("Extracted data exceeds 100 MB.");const b=await f.async("nodebuffer");total+=b.length;if(total>100*1024*1024)throw Error("Extracted data exceeds 100 MB.");out.file(path,b);}return {buffer:await out.generateAsync({type:"nodebuffer",compression:"DEFLATE"}),filename:name(original.replace(/\.zip$/i,"")+"-extracted","zip"),mimeType:"application/zip"};}
  throw Error("Unsupported conversion.");
 }
+export async function verify(result:Result):Promise<void>{
+ const ext=result.filename.split(".").pop()?.toLowerCase()||"";
+ if(result.mimeType.startsWith("image/")){const meta=await sharp(result.buffer,{failOn:"error"}).metadata();const expected=ext==="jpg"?"jpeg":ext;if(meta.format!==expected||!meta.width||!meta.height)throw Error("Image output verification failed.");return;}
+ if(result.mimeType==="application/json"){JSON.parse(result.buffer.toString("utf8"));return;}
+ if(result.mimeType.startsWith("text/csv")){parse(result.buffer,{skip_empty_lines:true,bom:true});return;}
+ if(result.mimeType==="application/xml"){if(XMLValidator.validate(result.buffer.toString("utf8"))!==true)throw Error("XML output verification failed.");return;}
+ if(ext==="xlsx"){const workbook=new ExcelJS.Workbook();await workbook.xlsx.load(result.buffer as any);if(!workbook.worksheets.length)throw Error("Workbook output verification failed.");return;}
+ if(result.mimeType==="application/zip"){const archive=await JSZip.loadAsync(result.buffer);if(!Object.keys(archive.files).length)throw Error("Archive output verification failed.");return;}
+ if(result.mimeType.startsWith("text/plain")){new TextDecoder("utf-8",{fatal:true}).decode(result.buffer);return;}
+ throw Error("No output verifier is available for this format.");
+}
